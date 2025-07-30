@@ -92,7 +92,20 @@ namespace Puzzle15
 
         private void CheckGridValid()
         {
+            int[] grid = new int[_gridSize * _gridSize];
+            for (int i = 0; i < _gridSize; i++)
+            {
+                for (int j = 0; j < _gridSize; j++)
+                {
+                    grid[j + (i * _gridSize)] = _grid[i, j];
+                }
+            }
+            Array.Sort(grid);
 
+            for (int i = 0; i < _gridSize * _gridSize; i++)
+            {
+                if (grid[i] != i) throw new Exception("Grid not valid!");
+            }
         }
 
         private void DebugGrid()
