@@ -3,23 +3,23 @@ using Puzzle15;
 
 namespace Puzzle15Tests
 {
-    public class GameControllerTest
+    public class GridTest
     {
         [Test]
         public void WhenGetCellValue_AndGridSize4_ThenValueIsCorrect()
         {
             // Arrange
             int gridSize = 4;
-            int[,] grid = new int[gridSize, gridSize];
+            int[,] gridIn = new int[gridSize, gridSize];
 
             for (int i = 0; i < gridSize; i++)
             {
                 for (int j = 0; j < gridSize; j++)
                 {
-                    grid[i, j] = j + (i * gridSize);
+                    gridIn[i, j] = j + (i * gridSize);
                 }
             }
-            GameController gameController = new(gridSize, grid);
+            Grid grid = new(gridSize, gridIn);
 
             // Act
             bool isCorrect = true;
@@ -27,7 +27,7 @@ namespace Puzzle15Tests
             {
                 for (int j = 0; j < gridSize; j++)
                 {
-                    if (gameController.GetCellValue(i, j) != grid[i, j])
+                    if (grid[i, j] != gridIn[i, j])
                     {
                         isCorrect = false;
                     }
@@ -46,12 +46,12 @@ namespace Puzzle15Tests
             isWin = false;
             int gridSize = 3;
 
-            GameController gameController = new(gridSize, GenerateGridForWinTest(gridSize));
-            gameController.OnWin += SetWin;
+            Grid grid = new(gridSize, GenerateGridForWinTest(gridSize));
+            grid.OnWin += SetWin;
 
             // Act
-            gameController.ClickOnCell(2, 2);
-            gameController.OnWin -= SetWin;
+            grid.ClickOnCell(2, 2);
+            grid.OnWin -= SetWin;
 
             // Assert
             Assert.True(isWin);
@@ -64,12 +64,12 @@ namespace Puzzle15Tests
             isWin = false;
             int gridSize = 4;
 
-            GameController gameController = new(gridSize, GenerateGridForWinTest(gridSize));
-            gameController.OnWin += SetWin;
+            Grid grid = new(gridSize, GenerateGridForWinTest(gridSize));
+            grid.OnWin += SetWin;
 
             // Act
-            gameController.ClickOnCell(3, 3);
-            gameController.OnWin -= SetWin;
+            grid.ClickOnCell(3, 3);
+            grid.OnWin -= SetWin;
 
             // Assert
             Assert.True(isWin);
@@ -82,12 +82,12 @@ namespace Puzzle15Tests
             isWin = false;
             int gridSize = 5;
 
-            GameController gameController = new(gridSize, GenerateGridForWinTest(gridSize));
-            gameController.OnWin += SetWin;
+            Grid grid = new(gridSize, GenerateGridForWinTest(gridSize));
+            grid.OnWin += SetWin;
 
             // Act
-            gameController.ClickOnCell(4, 4);
-            gameController.OnWin -= SetWin;
+            grid.ClickOnCell(4, 4);
+            grid.OnWin -= SetWin;
 
             // Assert
             Assert.True(isWin);
@@ -98,24 +98,24 @@ namespace Puzzle15Tests
         {
             // Arrange
             int gridSize = 4;
-            int[,] grid =
+            int[,] gridIn =
             {
             { 1, 0, 2, 3 },
             { 4, 5, 6, 7 },
             { 8, 9, 10, 11 },
             { 12, 13, 14, 15 }
         };
-            GameController gameController = new(gridSize, grid);
+            Grid grid = new(gridSize, gridIn);
 
-            int prev1 = gameController.GetCellValue(0, 0);
-            int prev2 = gameController.GetCellValue(0, 1);
+            int prev1 = grid[0, 0];
+            int prev2 = grid[0, 1];
 
             // Act
-            gameController.ClickOnCell(0, 0);
+            grid.ClickOnCell(0, 0);
 
             // Assert
-            Assert.AreEqual(prev1, gameController.GetCellValue(0, 1));
-            Assert.AreEqual(prev2, gameController.GetCellValue(0, 0));
+            Assert.AreEqual(prev1, grid[0, 1]);
+            Assert.AreEqual(prev2, grid[0, 0]);
         }
 
         [Test]
@@ -123,24 +123,24 @@ namespace Puzzle15Tests
         {
             // Arrange
             int gridSize = 4;
-            int[,] grid =
+            int[,] gridIn =
             {
             { 1, 8, 2, 3 },
             { 4, 5, 6, 7 },
             { 13, 9, 10, 11 },
             { 12, 0, 14, 15 }
         };
-            GameController gameController = new(gridSize, grid);
+            Grid grid = new(gridSize, gridIn);
 
-            int prev1 = gameController.GetCellValue(gridSize - 1, 0);
-            int prev2 = gameController.GetCellValue(gridSize - 1, 1);
+            int prev1 = grid[gridSize - 1, 0];
+            int prev2 = grid[gridSize - 1, 1];
 
             // Act
-            gameController.ClickOnCell(gridSize - 1, 0);
+            grid.ClickOnCell(gridSize - 1, 0);
 
             // Assert
-            Assert.AreEqual(prev1, gameController.GetCellValue(gridSize - 1, 1));
-            Assert.AreEqual(prev2, gameController.GetCellValue(gridSize - 1, 0));
+            Assert.AreEqual(prev1, grid[gridSize - 1, 1]);
+            Assert.AreEqual(prev2, grid[gridSize - 1, 0]);
         }
 
         [Test]
@@ -148,24 +148,24 @@ namespace Puzzle15Tests
         {
             // Arrange
             int gridSize = 4;
-            int[,] grid =
+            int[,] gridIn =
             {
             { 1, 8, 0, 3 },
             { 4, 5, 6, 7 },
             { 13, 9, 10, 11 },
             { 12, 2, 14, 15 }
         };
-            GameController gameController = new(gridSize, grid);
+            Grid grid = new(gridSize, gridIn);
 
-            int prev1 = gameController.GetCellValue(0, gridSize - 1);
-            int prev2 = gameController.GetCellValue(0, gridSize - 2);
+            int prev1 = grid[0, gridSize - 1];
+            int prev2 = grid[0, gridSize - 2];
 
             // Act
-            gameController.ClickOnCell(0, gridSize - 1);
+            grid.ClickOnCell(0, gridSize - 1);
 
             // Assert
-            Assert.AreEqual(prev1, gameController.GetCellValue(0, gridSize - 2));
-            Assert.AreEqual(prev2, gameController.GetCellValue(0, gridSize - 1));
+            Assert.AreEqual(prev1, grid[0, gridSize - 2]);
+            Assert.AreEqual(prev2, grid[0, gridSize - 1]);
         }
 
         [Test]
@@ -173,39 +173,39 @@ namespace Puzzle15Tests
         {
             // Arrange
             int gridSize = 4;
-            int[,] grid =
+            int[,] gridIn =
             {
             { 1, 8, 14, 3 },
             { 4, 5, 6, 7 },
             { 13, 9, 10, 11 },
             { 12, 2, 0, 15 }
         };
-            GameController gameController = new(gridSize, grid);
+            Grid grid = new(gridSize, gridIn);
 
-            int prev1 = gameController.GetCellValue(gridSize - 1, gridSize - 1);
-            int prev2 = gameController.GetCellValue(gridSize - 1, gridSize - 2);
+            int prev1 = grid[gridSize - 1, gridSize - 1];
+            int prev2 = grid[gridSize - 1, gridSize - 2];
 
             // Act
-            gameController.ClickOnCell(gridSize - 1, gridSize - 1);
+            grid.ClickOnCell(gridSize - 1, gridSize - 1);
 
             // Assert
-            Assert.AreEqual(prev1, gameController.GetCellValue(gridSize - 1, gridSize - 2));
-            Assert.AreEqual(prev2, gameController.GetCellValue(gridSize - 1, gridSize - 1));
+            Assert.AreEqual(prev1, grid[gridSize - 1, gridSize - 2]);
+            Assert.AreEqual(prev2, grid[gridSize - 1, gridSize - 1]);
         }
 
         private int[,] GenerateGridForWinTest(int gridSize)
         {
-            int[,] grid = new int[gridSize, gridSize];
+            int[,] gridIn = new int[gridSize, gridSize];
             for (int j = 0; j < gridSize; j++)
             {
                 for (int i = 0; i < gridSize; i++)
                 {
 
-                    grid[i, j] = (i == gridSize - 1) && (j == gridSize - 1) ? 0 : j + (i * gridSize) + 1;
+                    gridIn[i, j] = (i == gridSize - 1) && (j == gridSize - 1) ? 0 : j + (i * gridSize) + 1;
                 }
             }
-            (grid[gridSize - 1, gridSize - 1], grid[gridSize - 1, gridSize - 2]) = (grid[gridSize - 1, gridSize - 2], grid[gridSize - 1, gridSize - 1]);
-            return grid;
+            (gridIn[gridSize - 1, gridSize - 1], gridIn[gridSize - 1, gridSize - 2]) = (gridIn[gridSize - 1, gridSize - 2], gridIn[gridSize - 1, gridSize - 1]);
+            return gridIn;
         }
 
         private void SetWin()

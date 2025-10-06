@@ -4,25 +4,25 @@ using UnityEngine;
 
 namespace Puzzle15
 {
-    public class GameController
+    public class Grid: IGridModel
     {
         public event Action<int, int, int, int> OnCellSwapped = null;
         public event Action OnWin = null;
 
-        private int _gridSize = 0;
-        private int[,] _grid = null;
+        private readonly int _gridSize = 0;
+        private int[,] _cells = null;
 
-        public GameController(int gridSize, int[,] grid = null)
+        public Grid(int gridSize, int[,] grid = null)
         {
             if (grid == null)
             {
-                _grid = new int[gridSize, gridSize];
+                _cells = new int[gridSize, gridSize];
                 _gridSize = gridSize;
                 InitializeGrid();
             }
             else
             {
-                _grid = (int[,])grid.Clone();
+                _cells = (int[,])grid.Clone();
                 _gridSize = gridSize;
                 CheckGridValid();
             }
@@ -31,21 +31,21 @@ namespace Puzzle15
 
         public void ClickOnCell(int i, int j)
         {
-            if (i > 0 && _grid[i - 1, j] == 0) { SwapCells(i, j, i - 1, j); }
-            else if (i < _gridSize - 1 && _grid[i + 1, j] == 0) { SwapCells(i, j, i + 1, j); }
-            else if (j > 0 && _grid[i, j - 1] == 0) { SwapCells(i, j, i, j - 1); }
-            else if (j < _gridSize - 1 && _grid[i, j + 1] == 0) { SwapCells(i, j, i, j + 1); }
+            if (i > 0 && _cells[i - 1, j] == 0) { SwapCells(i, j, i - 1, j); }
+            else if (i < _gridSize - 1 && _cells[i + 1, j] == 0) { SwapCells(i, j, i + 1, j); }
+            else if (j > 0 && _cells[i, j - 1] == 0) { SwapCells(i, j, i, j - 1); }
+            else if (j < _gridSize - 1 && _cells[i, j + 1] == 0) { SwapCells(i, j, i, j + 1); }
             if (CheckWin()) OnWin?.Invoke();
         }
 
-        public int GetCellValue(int i, int j)
+        public int this[int i, int j]
         {
-            return _grid[i, j];
+            get => _cells[i, j];
         }
 
         private void SwapCells(int i, int j, int ni, int nj)
         {
-            (_grid[ni, nj], _grid[i, j]) = (_grid[i, j], _grid[ni, nj]);
+            (_cells[ni, nj], _cells[i, j]) = (_cells[i, j], _cells[ni, nj]);
             OnCellSwapped?.Invoke(i, j, ni, nj);
         }
 
@@ -55,7 +55,7 @@ namespace Puzzle15
             {
                 for (int j = 0; j < _gridSize; j++)
                 {
-                    _grid[i, j] = j + (i * _gridSize);
+                    _cells[i, j] = j + (i * _gridSize);
                 }
             }
             do
@@ -71,7 +71,7 @@ namespace Puzzle15
                     int randomRow = j / _gridSize;
                     int randomCol = j % _gridSize;
 
-                    (_grid[randomRow, randomCol], _grid[currentRow, currentCol]) = (_grid[currentRow, currentCol], _grid[randomRow, randomCol]);
+                    (_cells[randomRow, randomCol], _cells[currentRow, currentCol]) = (_cells[currentRow, currentCol], _cells[randomRow, randomCol]);
                 }
             }
             while (CheckWin());
@@ -84,7 +84,7 @@ namespace Puzzle15
                 for (int j = _gridSize - 1; j > 0; j--)
                 {
                     if (i == _gridSize - 1) j--;
-                    if (_grid[i, j] != j + (i * _gridSize) + 1) return false;
+                    if (_cells[i, j] != j + (i * _gridSize) + 1) return false;
                 }
             }
             return true;
@@ -97,7 +97,7 @@ namespace Puzzle15
             {
                 for (int j = 0; j < _gridSize; j++)
                 {
-                    grid[j + (i * _gridSize)] = _grid[i, j];
+                    grid[j + (i * _gridSize)] = _cells[i, j];
                 }
             }
             Array.Sort(grid);
@@ -115,7 +115,7 @@ namespace Puzzle15
             {
                 for (int j = 0; j < _gridSize; j++)
                 {
-                    result.Append(GetCellValue(i, j) + " ");
+                    result.Append(_cells[i, j] + " ");
                 }
                 result.Append("\n");
             }
