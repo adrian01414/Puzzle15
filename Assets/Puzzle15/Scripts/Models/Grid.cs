@@ -1,10 +1,11 @@
 using System;
 using System.Text;
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 namespace Puzzle15
 {
-    public class Grid: IGridModel
+    public sealed class Grid : IGridModel
     {
         public event Action<int, int, int, int> OnCellSwapped = null;
         public event Action OnWin = null;
@@ -26,7 +27,6 @@ namespace Puzzle15
                 _gridSize = gridSize;
                 CheckGridValid();
             }
-
         }
 
         public void ClickOnCell(int i, int j)
@@ -36,6 +36,11 @@ namespace Puzzle15
             else if (j > 0 && _cells[i, j - 1] == 0) { SwapCells(i, j, i, j - 1); }
             else if (j < _gridSize - 1 && _cells[i, j + 1] == 0) { SwapCells(i, j, i, j + 1); }
             if (CheckWin()) OnWin?.Invoke();
+        }
+
+        public int[,] GetCells()
+        {
+            return (int[,])_cells.Clone();
         }
 
         public int this[int i, int j]

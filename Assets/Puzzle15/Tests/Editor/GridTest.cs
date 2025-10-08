@@ -3,7 +3,7 @@ using Puzzle15;
 
 namespace Puzzle15Tests
 {
-    public class GridTest
+    public sealed class GridTest
     {
         [Test]
         public void WhenGetCellValue_AndGridSize4_ThenValueIsCorrect()
@@ -191,6 +191,33 @@ namespace Puzzle15Tests
             // Assert
             Assert.AreEqual(prev1, grid[gridSize - 1, gridSize - 2]);
             Assert.AreEqual(prev2, grid[gridSize - 1, gridSize - 1]);
+        }
+
+        [Test]
+        public void WhenInitGrid_AndGetCells_ThenGridEqual()
+        {
+            // Arrange
+            int gridSize = 4;
+            int[,] gridIn =
+            {
+            { 1, 8, 14, 3 },
+                { 4, 5, 6, 7 },
+                { 13, 9, 10, 11 },
+                { 12, 2, 0, 15 }
+            };
+            Grid grid = new(gridSize, gridIn);
+
+            // Act
+            int[,] newgrid = grid.GetCells();
+
+            // Assert
+            for (int i = 0; i < gridSize; i++)
+            {
+                for (int j = 0; j < gridSize; j++)
+                {
+                    Assert.AreEqual(gridIn[i, j], newgrid[i, j]);
+                }
+            }
         }
 
         private int[,] GenerateGridForWinTest(int gridSize)

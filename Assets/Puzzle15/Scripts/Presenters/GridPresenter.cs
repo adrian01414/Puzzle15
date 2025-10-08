@@ -1,26 +1,23 @@
 using System;
-using UnityEngine;
 using Zenject;
 
 namespace Puzzle15
 {
-    public class GridPresenter: IInitializable, IDisposable
+    public sealed class GridPresenter: IInitializable, IDisposable
     {
         private readonly IGridModel _gridModel;
-        // private readonly IView _gridView;
+        private readonly IGridView _gridView;
 
-        public GridPresenter(IGridModel gridModel) // view
+        public GridPresenter(IGridModel gridModel, IGridView gridView)
         {
             _gridModel = gridModel;
-            // view
+            _gridView = gridView;
         }
 
-        public void Initialize()
+        void IInitializable.Initialize()
         {
             _gridModel.OnCellSwapped += SwapCell;
             _gridModel.OnWin += FinishGame;
-
-            // subscribe to view
         }
 
         private void SwapCell(int i, int j, int ni, int nj)
@@ -33,7 +30,7 @@ namespace Puzzle15
             
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             _gridModel.OnCellSwapped -= SwapCell;
             _gridModel.OnWin -= FinishGame;

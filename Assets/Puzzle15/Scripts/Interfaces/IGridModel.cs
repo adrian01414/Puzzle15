@@ -9,6 +9,7 @@ namespace Puzzle15
         public event Action OnWin;
 
         public void ClickOnCell(int i, int j);
+        public int[,] GetCells();
 
         public int this[int i, int j] { get; }
     }
