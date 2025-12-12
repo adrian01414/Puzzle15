@@ -1,12 +1,12 @@
 using System;
-using System.Text;
-using UnityEngine;
+using System.Collections;
 
 namespace Puzzle15
 {
-    public sealed class Grid
+    public class Grid
     {
-        public event Action<int, int, int, int> OnCellSwapped = null;
+        public event Action<int, int, int, int> OnCellSwappedWithIndexes = null;
+        public event Action OnCellSwapped = null;
         public event Action OnWin = null;
 
         private readonly int _gridSize = 0;
@@ -18,14 +18,12 @@ namespace Puzzle15
             {
                 throw new Exception("Grid size must be more then 3!");
             }
-            //_cells = new int[gridSize, gridSize];
             _gridSize = gridSize;
             _cells = gridGenerator.Generate(gridSize);
             if(!IsGridValid())
             {
                 throw new Exception("Generator returns not valid grid!");
             }
-            //InitializeGrid();
         }
 
         public void ClickOnCell(int i, int j)
@@ -56,7 +54,8 @@ namespace Puzzle15
         private void SwapCells(int i, int j, int ni, int nj)
         {
             (_cells[ni, nj], _cells[i, j]) = (_cells[i, j], _cells[ni, nj]);
-            OnCellSwapped?.Invoke(i, j, ni, nj);
+            OnCellSwappedWithIndexes?.Invoke(i, j, ni, nj);
+            OnCellSwapped?.Invoke();
         }
 
         private bool IsWin()
@@ -89,20 +88,6 @@ namespace Puzzle15
                 if (grid[i] != i) return false;
             }
             return true;
-        }
-
-        private void DebugGrid()
-        {
-            StringBuilder result = new StringBuilder("");
-            for (int i = 0; i < _gridSize; i++)
-            {
-                for (int j = 0; j < _gridSize; j++)
-                {
-                    result.Append(_cells[i, j] + " ");
-                }
-                result.Append("\n");
-            }
-            Debug.Log(result.ToString());
         }
     }
 }

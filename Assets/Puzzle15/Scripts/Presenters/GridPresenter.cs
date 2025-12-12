@@ -4,7 +4,7 @@ using Zenject;
 
 namespace Puzzle15
 {
-    public sealed class GridPresenter: IInitializable, IDisposable
+    public class GridPresenter: IInitializable, IDisposable
     {
         private readonly Grid _gridModel;
         private readonly GridView _gridView;
@@ -15,10 +15,9 @@ namespace Puzzle15
             _gridView = gridView;
         }
 
-        void IInitializable.Initialize()
+        public void Initialize()
         {
-            _gridModel.OnCellSwapped += SwapCell;
-            _gridModel.OnWin += FinishGame;
+            _gridModel.OnCellSwappedWithIndexes += SwapCell;
             _gridView.OnCellClicked += ClickOnCell;
         }
 
@@ -32,15 +31,10 @@ namespace Puzzle15
             _gridView.SwapCells(i, j, ni, nj);
         }
 
-        private void FinishGame()
+        public void Dispose()
         {
-            Debug.Log("Finish game!"); //
-        }
-
-        void IDisposable.Dispose()
-        {
-            _gridModel.OnCellSwapped -= SwapCell;
-            _gridModel.OnWin -= FinishGame;
+            _gridModel.OnCellSwappedWithIndexes -= SwapCell;
+            _gridView.OnCellClicked -= ClickOnCell;
         }
     }
 }

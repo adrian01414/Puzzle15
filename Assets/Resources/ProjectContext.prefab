@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5429388845985842841}
   - component: {fileID: 3494666307870256849}
+  - component: {fileID: 2113240961205887588}
   m_Layer: 0
   m_Name: ProjectContext
   m_TagString: Untagged
@@ -45,7 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Zenject::Zenject.ProjectContext
   _scriptableObjectInstallers: []
-  _monoInstallers: []
+  _monoInstallers:
+  - {fileID: 2113240961205887588}
   _installerPrefabs: []
   _parentNewObjectsUnderContext: 1
   _editorReflectionBakingCoverageMode: 0
@@ -60,3 +62,20 @@ MonoBehaviour:
       _missingHandlerDefaultResponse: 2
       _requireStrictUnsubscribe: 0
       _defaultAsyncTickPriority: 1
+--- !u!114 &2113240961205887588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3131827646533737336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 261eb722ae8a4d84c978012f68e1adbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Puzzle15.ProjectMonoInstaller
+  _levelConfigs:
+  - {fileID: 11400000, guid: 707e986876c98dc44adb0bc9c3e0cf16, type: 2}
+  - {fileID: 11400000, guid: 18b28c0fc081d2e458a5b7540371c4c2, type: 2}
+  - {fileID: 11400000, guid: fad56383da152dc4faa07c63f2ade4cc, type: 2}
+  _defaultConfig: {fileID: 11400000, guid: 18b28c0fc081d2e458a5b7540371c4c2, type: 2}

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public sealed class GridView : MonoBehaviour
+public class GridView : MonoBehaviour
 {
     public event Action<int, int> OnCellClicked = null;
 

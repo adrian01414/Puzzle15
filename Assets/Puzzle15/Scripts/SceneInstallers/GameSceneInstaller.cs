@@ -6,14 +6,15 @@ namespace Puzzle15
 {
     public class GameSceneInstaller : MonoInstaller
     {
-        [SerializeField] private GridView _view = null;
+        [SerializeField] private GridView _view;
+        [SerializeField] private CounterView _counterView;
 
-        private LevelConfig _levelConfig;
+        [Inject] private LevelConfigurationManager _levelConfigurationManager;
 
         public override void InstallBindings()
         {
             IGridGenerator gridGenerator = new SimpleGridGenerator();
-            Grid model = new Grid(gridGenerator, _levelConfig.Size);
+            Grid model = new Grid(gridGenerator, _levelConfigurationManager.CurrentConfig.Size);
 
             Container
                 .Bind<Grid>()
@@ -33,14 +34,33 @@ namespace Puzzle15
                 .NonLazy();
 
             Container
-                .Bind<Stopwatch>()
+                .BindInterfacesAndSelfTo<Stopwatch>()
                 .FromNew()
                 .AsSingle();
 
+            BindCounter();
+        }
+
+        private void BindCounter()
+        {
             Container
                 .Bind<Counter>()
-                .FromNew()
                 .AsSingle();
+
+            Container
+                .Bind<ISettableFieldView>()
+                .FromInstance(_counterView)
+                .AsSingle();
+
+            Container
+                .BindInterfacesTo<CounterPresenter>()
+                .AsSingle()
+                .NonLazy();
+
+            Container
+                .BindInterfacesTo<CounterEventHandler>()
+                .AsSingle()
+                .NonLazy();
         }
     }
 }

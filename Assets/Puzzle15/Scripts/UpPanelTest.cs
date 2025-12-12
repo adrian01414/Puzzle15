@@ -5,8 +5,8 @@ using Zenject;
 
 public class UpPanelTest : MonoBehaviour
 {
-    private Stopwatch _stopwatch = new();
-    private Counter _counter = new();
+    private Stopwatch _stopwatch;
+    private Counter _counter;
 
     [Inject]
     public void Construct(Stopwatch stopWatch, Counter counter)
@@ -49,10 +49,5 @@ public class UpPanelTest : MonoBehaviour
     public void CounterReset()
     {
         _counter?.Reset();
-    }
-
-    private void Update()
-    {
-        _stopwatch?.Update(Time.deltaTime);
     }
 }

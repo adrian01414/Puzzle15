@@ -1,58 +1,30 @@
-using System;
+using R3;
+using Zenject;
 
 namespace Puzzle15
 {
-    public class Stopwatch
+    public class Stopwatch : ITickable
     {
-        public event Action OnStart = null;
-        public event Action OnStop = null;
-        public event Action OnRestart = null;
-        public event Action OnReset = null;
-        public event Action<float> OnUpdate = null;
+        public Observable<float> Time => _time;
 
-        private float _time = 0f;
+        private ReactiveProperty<float> _time = new(0f);
         private bool _isStopped = true;
 
-        public float Time => _time;
-
-        public Stopwatch()
+        public void Tick()
         {
-            _time = 0f;
-            _isStopped = true;
+            if(!_isStopped) _time.Value += UnityEngine.Time.deltaTime;
         }
 
-        public void Update(float deltaTime)
-        {
-            if(!_isStopped)
-            {
-                _time += deltaTime;
-                OnUpdate?.Invoke(deltaTime);
-            }
-        }
+        public void Start() => _isStopped = false;
 
-        public void Start()
-        {
-            _isStopped = false;
-            OnStart?.Invoke();
-        }
-
-        public void Stop()
-        {
-            _isStopped = true;
-            OnStop?.Invoke();
-        }
+        public void Stop() => _isStopped = true;
 
         public void Restart()
         {
-            _time = 0f;
+            _time.Value = 0f;
             Start();
-            OnRestart?.Invoke();
         }
 
-        public void Reset()
-        {
-            _time = 0f;
-            OnReset?.Invoke();
-        }
+        public void Reset() => _time.Value = 0f;
     }
 }
