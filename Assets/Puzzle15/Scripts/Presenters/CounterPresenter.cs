@@ -6,8 +6,8 @@ namespace Puzzle15
 {
     public class CounterPresenter: IInitializable, IDisposable
     {
-        private Counter _model;
-        private ISettableFieldView _view;
+        private readonly Counter _model;
+        private readonly ISettableFieldView _view;
 
         private CompositeDisposable _disposables = new();
 
@@ -17,19 +17,10 @@ namespace Puzzle15
             _view = view;
         }
 
-        public void Initialize()
-        {
-            _model.Value.Subscribe(SetCounterValue).AddTo(_disposables);
-        }
+        public void Initialize() => _model.Value.Subscribe(SetCounterValue).AddTo(_disposables);
 
-        private void SetCounterValue(int value)
-        {
-            _view.SetValue(value.ToString());
-        }
+        public void Dispose() => _disposables.Dispose();
 
-        public void Dispose()
-        {
-            _disposables.Dispose();
-        }
+        private void SetCounterValue(int value) => _view.SetValue(value.ToString());
     }
 }

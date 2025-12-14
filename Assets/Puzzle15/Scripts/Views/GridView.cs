@@ -1,78 +1,156 @@
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class GridView : MonoBehaviour
+namespace Puzzle15
 {
-    public event Action<int, int> OnCellClicked = null;
-
-    [SerializeField] private Transform _cellsParentTransfom = null;
-    [SerializeField] private GameObject _cellPrefab = null;
-
-    private MonoCell[,] _cells = null;
-
-    public void Initialize(int size, int[,] values)
+    public class GridView : MonoBehaviour
     {
-        var cellsRect = GetComponent<RectTransform>();
-        _cells = new MonoCell[size, size];
+        public event Action<int, int> OnCellClicked;
 
-        for (int i = 0; i < size; i++)
+        [SerializeField] private Transform _cellsParentTransfom;
+        [SerializeField] private CellView _cellViewPrefab;
+
+        private int _gridSize;
+        private CellView[,] _cellViews;
+        private Dictionary<RectTransform, (int, int)> _cellsPositions;
+        private Dictionary<(int, int), RectTransform> _cellsIndices;
+
+        public void Initialize(int size, int[,] values)
         {
-            for (int j = 0; j < size; j++)
+            if (_cellsPositions == null)
             {
-                var cell = Instantiate(_cellPrefab, _cellsParentTransfom);
-                var cellRect = cell.GetComponent<RectTransform>();
-                cellRect.sizeDelta = new Vector2(cellsRect.rect.width / size,
-                                                 cellsRect.rect.height / size);
-                cellRect.anchorMin = new Vector2(0, 1);
-                cellRect.anchorMax = new Vector2(0, 1);
-                cellRect.anchoredPosition = new Vector2(j * cellRect.rect.width + cellRect.rect.width / 2,
-                                                        -i * cellRect.rect.height - cellRect.rect.height / 2);
-                cell.name = "Cell [" + i + ", " + j + "]";
-                var monoCell = cell.GetComponent<MonoCell>();
-                _cells[i, j] = monoCell;
-
-                monoCell.Construct(values[i, j], i, j);
-                if (values[i, j] == 0)
+                _gridSize = size;
+                InitializeCellsParents(values);
+            }
+            else
+            {
+                if (size != _gridSize)
                 {
-                    monoCell.DisableCell();
+                    foreach(var cellViewRect in _cellsPositions)
+                    {
+                        Destroy(cellViewRect.Key.gameObject);
+                    }
+                    InitializeCellsParents(values);
+                }
+            }
+            
+            if (_cellViews != null)
+            {
+                foreach (var cellView in _cellViews)
+                {
+                    if(cellView != null)
+                    {
+                        Destroy(cellView.gameObject);
+                    }
+                }
+            }
+            InitializeCells(values);
+        }
+
+        private void InitializeCellsParents(int[,] values)
+        {
+            var cellsRect = GetComponent<RectTransform>();
+            _cellsPositions = new Dictionary<RectTransform, (int, int)>();
+            _cellsIndices = new Dictionary<(int, int), RectTransform>();
+
+            for (int i = 0; i < _gridSize; i++)
+            {
+                for (int j = 0; j < _gridSize; j++)
+                {
+                    var cell = new GameObject("Cell[" + i + ", " + j + "]");
+                    cell.transform.SetParent(_cellsParentTransfom);
+                    cell.transform.localScale = Vector3.one;
+
+                    var cellRect = cell.AddComponent<RectTransform>();
+                    cellRect.sizeDelta = new Vector2(cellsRect.rect.width / _gridSize,
+                                                     cellsRect.rect.height / _gridSize);
+                    cellRect.anchorMin = new Vector2(0, 1);
+                    cellRect.anchorMax = new Vector2(0, 1);
+                    cellRect.anchoredPosition = new Vector2(j * cellRect.rect.width + cellRect.rect.width / 2,
+                                                            -i * cellRect.rect.height - cellRect.rect.height / 2);
+                    _cellsPositions.Add(cellRect, (i, j));
+                    _cellsIndices.Add((i, j), cellRect);
                 }
             }
         }
 
-        foreach (var cell in _cells)
+        private void InitializeCells(int[,] values)
         {
-            cell.OnCellClicked += ClickOnCell;
-        }
-    }
+            _cellViews = new CellView[_gridSize, _gridSize];
 
-
-    public void SwapCells(int i, int j, int ni, int nj)
-    {
-        _cells[i, j].SetPosition(ni, nj);
-        _cells[ni, nj].SetPosition(i, j);
-        (_cells[i, j], _cells[ni, nj]) = (_cells[ni, nj], _cells[i, j]);
-
-        var temp = _cells[i, j].transform.position;
-        _cells[i, j].transform.position = new Vector3(_cells[ni, nj].transform.position.x,
-                                                      _cells[ni, nj].transform.position.y,
-                                                      _cells[ni, nj].transform.position.z);
-        _cells[ni, nj].transform.position = new Vector3(temp.x,
-                                                        temp.y,
-                                                        temp.z);
-    }
-
-    private void ClickOnCell(int i, int j)
-    {
-        OnCellClicked?.Invoke(i, j);
-    }
-
-    private void OnDisable()
-    {
-        foreach (var cell in _cells)
-        {
-            if(cell != null)
+            for (int i = 0; i < _gridSize; i++)
             {
-                cell.OnCellClicked -= OnCellClicked;
+                for (int j = 0; j < _gridSize; j++)
+                {
+                    if (values[i, j] == 0)
+                    {
+                        continue;
+                    }
+
+                    _cellsIndices.TryGetValue((i, j), out var cellRect);
+
+                    var cellView = Instantiate(_cellViewPrefab, cellRect);
+
+                    _cellViews[i, j] = cellView;
+
+                    cellView.ParentRectTransform = cellRect;
+                    var cellViewRect = cellView.RectTransform;
+
+                    cellViewRect.anchorMin = Vector2.zero;
+                    cellViewRect.anchorMax = Vector2.one;
+
+                    cellViewRect.offsetMin = Vector2.zero;
+                    cellViewRect.offsetMax = Vector2.zero;
+
+                    cellView.SetDigitText(values[i, j].ToString());
+                    cellView.OnCellClicked += ClickOnCell;
+                }
+            }
+        }
+
+        public void MoveCell(int i, int j, int ni, int nj)
+        {
+            if (_cellsIndices.TryGetValue((ni, nj), out var targetRect))
+            {
+                _cellViews[i, j].transform.SetParent(targetRect);
+                _cellViews[i, j].ParentRectTransform = targetRect;
+
+                var cellViewRect = _cellViews[i, j].RectTransform;
+                cellViewRect.offsetMin = Vector2.zero;
+                cellViewRect.offsetMax = Vector2.zero;
+
+                _cellViews[ni, nj] = _cellViews[i, j];
+            } else
+            {
+                throw new Exception("Indices not found in dictinary!");
+            }
+        }
+
+        private void ClickOnCell(CellView cellView)
+        {
+            if (_cellsPositions.TryGetValue(cellView.ParentRectTransform, out var indices))
+            {
+                OnCellClicked?.Invoke(indices.Item1, indices.Item2);
+            } else
+            {
+                throw new Exception("Rect transfom not found in dictinary!");
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (_cellViews != null)
+            {
+                foreach (var cell in _cellViews)
+                {
+                    if (cell != null)
+                    {
+                        cell.OnCellClicked -= ClickOnCell;
+                    }
+                }
             }
         }
     }

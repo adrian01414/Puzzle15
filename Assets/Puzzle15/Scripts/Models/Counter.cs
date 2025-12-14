@@ -2,7 +2,7 @@
 
 namespace Puzzle15
 {
-    sealed public class Counter
+    public class Counter
     {
         public Observable<int> Value => _value;
 

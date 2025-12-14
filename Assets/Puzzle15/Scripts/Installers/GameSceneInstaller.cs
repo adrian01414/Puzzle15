@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Zenject;
 
@@ -8,37 +7,58 @@ namespace Puzzle15
     {
         [SerializeField] private GridView _view;
         [SerializeField] private CounterView _counterView;
+        [SerializeField] private StopwatchView _stopWatchView;
 
         [Inject] private LevelConfigurationManager _levelConfigurationManager;
 
         public override void InstallBindings()
         {
+            BindGrid();
+            BindStopWatch();
+            BindCounter();
+        }
+
+        private void BindGrid()
+        {
             IGridGenerator gridGenerator = new SimpleGridGenerator();
-            Grid model = new Grid(gridGenerator, _levelConfigurationManager.CurrentConfig.Size);
 
             Container
-                .Bind<Grid>()
-                .FromInstance(model)
-                .AsSingle();
+                .Bind<PuzzleGrid>()
+                .AsSingle()
+                .WithArguments(gridGenerator, _levelConfigurationManager.CurrentConfig.Size);
 
             Container
                 .Bind<GridView>()
                 .FromInstance(_view)
                 .AsSingle();
 
-            _view.Initialize(model.GetGridSize(), model.GetCells());
-
             Container
                 .BindInterfacesTo<GridPresenter>()
                 .AsSingle()
                 .NonLazy();
+        }
 
+        private void BindStopWatch()
+        {
             Container
                 .BindInterfacesAndSelfTo<Stopwatch>()
                 .FromNew()
                 .AsSingle();
 
-            BindCounter();
+            Container
+                .Bind<ISettableFieldView>()
+                .FromInstance(_stopWatchView)
+                .WhenInjectedInto<StopwatchPresenter>();
+
+            Container
+                .BindInterfacesTo<StopwatchPresenter>()
+                .AsSingle()
+                .NonLazy();
+
+            Container
+                .BindInterfacesTo<StopWatchEventHandler>()
+                .AsSingle()
+                .NonLazy();
         }
 
         private void BindCounter()
@@ -50,7 +70,7 @@ namespace Puzzle15
             Container
                 .Bind<ISettableFieldView>()
                 .FromInstance(_counterView)
-                .AsSingle();
+                .WhenInjectedInto<CounterPresenter>();
 
             Container
                 .BindInterfacesTo<CounterPresenter>()

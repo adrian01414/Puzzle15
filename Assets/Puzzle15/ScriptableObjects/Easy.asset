@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 017fd88c57decdd4990d07b964ea739b, type: 3}
   m_Name: Easy
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
+  <Size>k__BackingField: 3

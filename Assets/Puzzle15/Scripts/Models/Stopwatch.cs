@@ -19,12 +19,6 @@ namespace Puzzle15
 
         public void Stop() => _isStopped = true;
 
-        public void Restart()
-        {
-            _time.Value = 0f;
-            Start();
-        }
-
         public void Reset() => _time.Value = 0f;
     }
 }

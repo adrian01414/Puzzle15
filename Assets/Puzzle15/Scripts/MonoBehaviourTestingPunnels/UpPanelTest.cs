@@ -28,12 +28,6 @@ public class UpPanelTest : MonoBehaviour
     }
 
     [Button]
-    public void StopwatchRestart()
-    {
-        _stopwatch?.Restart();
-    }
-
-    [Button]
     public void StopwatchReset()
     {
         _stopwatch?.Reset();

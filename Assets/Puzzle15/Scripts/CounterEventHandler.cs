@@ -1,20 +1,23 @@
-﻿using Zenject;
+﻿using System;
+using Zenject;
 
 namespace Puzzle15
 {
-    public class CounterEventHandler: IInitializable
+    public class CounterEventHandler: IInitializable, IDisposable
     {
-        private Grid _gridModel;
+        private PuzzleGrid _grid;
         private Counter _counter;
 
-        public CounterEventHandler(Grid gridModel, Counter counter)
+        public CounterEventHandler(PuzzleGrid gridModel, Counter counter)
         {
-            _gridModel = gridModel;
+            _grid = gridModel;
             _counter = counter;
         }
 
-        public void Initialize() => _gridModel.OnCellSwapped += IncreaseCounter;
+        public void Initialize() => _grid.OnCellMoved += IncreaseCounter;
 
-        public void IncreaseCounter() => _counter.Increase();
+        public void IncreaseCounter(CellMoveData cellSwapData) => _counter.Increase();
+
+        public void Dispose() => _grid.OnCellMoved -= IncreaseCounter;
     }
 }

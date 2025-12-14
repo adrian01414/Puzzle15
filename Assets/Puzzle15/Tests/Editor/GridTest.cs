@@ -1,7 +1,6 @@
 using NUnit.Framework;
-using Puzzle15;
 
-namespace Puzzle15Tests
+namespace Puzzle15.Tests
 {
     public sealed class GridTest
     {
@@ -15,12 +14,13 @@ namespace Puzzle15Tests
             isWin = false;
             int gridSize = 3;
 
-            Grid grid = new(winGridGenerator, gridSize);
-            grid.OnWin += SetWin;
+            PuzzleGrid grid = new(winGridGenerator, gridSize);
+            grid.Initialize();
+            grid.OnWon += SetWin;
 
             // Act
             grid.ClickOnCell(2, 2);
-            grid.OnWin -= SetWin;
+            grid.OnWon -= SetWin;
 
             // Assert
             Assert.True(isWin);
@@ -33,12 +33,13 @@ namespace Puzzle15Tests
             isWin = false;
             int gridSize = 4;
 
-            Grid grid = new(winGridGenerator, gridSize);
-            grid.OnWin += SetWin;
+            PuzzleGrid grid = new(winGridGenerator, gridSize);
+            grid.Initialize();
+            grid.OnWon += SetWin;
 
             // Act
             grid.ClickOnCell(3, 3);
-            grid.OnWin -= SetWin;
+            grid.OnWon -= SetWin;
 
             // Assert
             Assert.True(isWin);
@@ -51,12 +52,13 @@ namespace Puzzle15Tests
             isWin = false;
             int gridSize = 5;
 
-            Grid grid = new(winGridGenerator, gridSize);
-            grid.OnWin += SetWin;
+            PuzzleGrid grid = new(winGridGenerator, gridSize);
+            grid.Initialize();
+            grid.OnWon += SetWin;
 
             // Act
             grid.ClickOnCell(4, 4);
-            grid.OnWin -= SetWin;
+            grid.OnWon -= SetWin;
 
             // Assert
             Assert.True(isWin);

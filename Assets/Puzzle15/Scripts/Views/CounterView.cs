@@ -1,7 +1,5 @@
-using R3;
 using TMPro;
 using UnityEngine;
-using Zenject;
 
 namespace Puzzle15
 {
@@ -9,9 +7,6 @@ namespace Puzzle15
     {
         [SerializeField] private TMP_Text _counterOutputText = null;
 
-        public void SetValue(string value)
-        {
-            _counterOutputText.text = value;
-        }
+        public void SetValue(string value) => _counterOutputText.text = value;
     }
 }
