@@ -7,11 +7,11 @@ namespace Puzzle15
     public class StopwatchPresenter: IInitializable, IDisposable
     {
         private readonly Stopwatch _model;
-        private readonly ISettableFieldView _view;
+        private readonly SettableFieldView _view;
 
         private CompositeDisposable _disposables = new();
 
-        public StopwatchPresenter(Stopwatch model, ISettableFieldView view)
+        public StopwatchPresenter(Stopwatch model, SettableFieldView view)
         {
             _model = model;
             _view = view;

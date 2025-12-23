@@ -20,7 +20,7 @@ namespace Puzzle15
             _gridView.OnCellClicked += ClickOnCell;
             _gridModel.OnInitialized += InitializeGridView;
 
-            _gridModel.Initialize();
+            InitializeGridView();
         }
 
         public void Dispose()

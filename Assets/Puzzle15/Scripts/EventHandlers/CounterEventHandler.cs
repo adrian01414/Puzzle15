@@ -14,10 +14,20 @@ namespace Puzzle15
             _counter = counter;
         }
 
-        public void Initialize() => _grid.OnCellMoved += IncreaseCounter;
+        public void Initialize()
+        {
+            _grid.OnCellMoved += IncreaseCounter;
+            _grid.OnInitialized += ResetCounter;
+        }
 
         public void IncreaseCounter(CellMoveData cellSwapData) => _counter.Increase();
 
-        public void Dispose() => _grid.OnCellMoved -= IncreaseCounter;
+        public void ResetCounter() => _counter.Reset();
+
+        public void Dispose()
+        {
+            _grid.OnCellMoved -= IncreaseCounter;
+            _grid.OnInitialized -= ResetCounter;
+        }
     }
 }

@@ -5,17 +5,32 @@ namespace Puzzle15
 {
     public class GameSceneInstaller : MonoInstaller
     {
+        [SerializeField] private Transform _stopwatchSpawnTransform;
+
         [SerializeField] private GridView _view;
         [SerializeField] private CounterView _counterView;
-        [SerializeField] private StopwatchView _stopWatchView;
+        [SerializeField] private StopwatchView _stopwatchView;
+        [SerializeField] private WinPanelView _winPanelView;
+
+        [SerializeField] private ThemeConfig _themeConfig; //
 
         [Inject] private LevelConfigurationManager _levelConfigurationManager;
 
         public override void InstallBindings()
         {
             BindGrid();
-            BindStopWatch();
+            BindStopwatch();
             BindCounter();
+
+            Container
+                .Bind<WinPanelView>()
+                .FromInstance(_winPanelView)
+                .AsSingle();
+
+            Container
+                .BindInterfacesTo<WinPanelPresenter>()
+                .AsSingle()
+                .NonLazy();
         }
 
         private void BindGrid()
@@ -38,16 +53,15 @@ namespace Puzzle15
                 .NonLazy();
         }
 
-        private void BindStopWatch()
+        private void BindStopwatch()
         {
             Container
                 .BindInterfacesAndSelfTo<Stopwatch>()
-                .FromNew()
                 .AsSingle();
 
             Container
-                .Bind<ISettableFieldView>()
-                .FromInstance(_stopWatchView)
+                .Bind<SettableFieldView>()
+                .FromInstance(_stopwatchView)
                 .WhenInjectedInto<StopwatchPresenter>();
 
             Container
@@ -56,7 +70,7 @@ namespace Puzzle15
                 .NonLazy();
 
             Container
-                .BindInterfacesTo<StopWatchEventHandler>()
+                .BindInterfacesTo<StopwatchEventHandler>()
                 .AsSingle()
                 .NonLazy();
         }
@@ -68,7 +82,7 @@ namespace Puzzle15
                 .AsSingle();
 
             Container
-                .Bind<ISettableFieldView>()
+                .Bind<SettableFieldView>()
                 .FromInstance(_counterView)
                 .WhenInjectedInto<CounterPresenter>();
 

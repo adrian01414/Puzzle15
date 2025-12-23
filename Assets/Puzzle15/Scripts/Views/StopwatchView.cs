@@ -1,33 +1,42 @@
-using TMPro;
 using UnityEngine;
 
 namespace Puzzle15
 {
-    public class StopwatchView : MonoBehaviour, ISettableFieldView
+    public class StopwatchView : SettableFieldView
     {
-        [SerializeField] private TextMeshProUGUI _stopwatchOutputText = null;
         [SerializeField] private float _updateInterval = 0.04f;
 
-        private bool _isCanUpdate = false;
         private float _timeCounter = 0f;
+
+        private bool _isSet = true;
+
+        private string _currentValue = "0";
+
+        public override void SetValue(string value)
+        {
+            _currentValue = value;
+        }
 
         private void Update()
         {
-            if (_timeCounter >= _updateInterval)
+            if (_isSet)
             {
-                _isCanUpdate = true;
+                if (!_outputText.text.Equals(_currentValue))
+                {
+                    base.SetValue(_currentValue);
+                    _isSet = false;
+                }
+            } else
+            {
+                if (_timeCounter >= _updateInterval)
+                {
+                    _isSet = true;
+                    _timeCounter = 0f;
+                }
+                _timeCounter += Time.deltaTime;
             }
-            _timeCounter += Time.deltaTime;
-        }
 
-        public void SetValue(string value)
-        {
-            if (_isCanUpdate)
-            {
-                _stopwatchOutputText.text = value;
-                _timeCounter = 0f;
-                _isCanUpdate = false;
-            }
+            
         }
     }
 }
