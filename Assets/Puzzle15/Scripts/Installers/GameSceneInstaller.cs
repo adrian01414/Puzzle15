@@ -18,6 +18,7 @@ namespace Puzzle15
 
         public override void InstallBindings()
         {
+            Application.targetFrameRate = 60; //
             BindGrid();
             BindStopwatch();
             BindCounter();
