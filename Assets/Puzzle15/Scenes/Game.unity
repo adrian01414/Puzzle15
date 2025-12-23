@@ -1264,6 +1264,7 @@ MonoBehaviour:
   _view: {fileID: 8043733}
   _counterView: {fileID: 1204474870}
   _stopwatchView: {fileID: 1510042301}
+  _winPanelView: {fileID: 1833824902}
   _themeConfig: {fileID: 0}
 --- !u!1 &1157767991
 GameObject:
@@ -1614,6 +1615,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1833824902 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5258728986005569211, guid: 812be7e99fe1e9e42a3ee300ce4f76fd, type: 3}
+  m_PrefabInstance: {fileID: 5172120007464925111}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e766c227545c04d9279b8ab4c8ae3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WinPanelView
 --- !u!1 &1868247574
 GameObject:
   m_ObjectHideFlags: 0
