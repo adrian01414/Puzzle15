@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Puzzle15/Scenes/MainMenu.unity
     guid: ca29d1a76e1dd6640bff0fc8b80167ce
   - enabled: 1
