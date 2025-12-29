@@ -90,11 +90,15 @@ namespace Puzzle15
         private void CellMoveAnimation(RectTransform rect)
         {
             rect.DOKill();
-            rect.DOScale(Vector3.one * 0.6f, 0.1f)
-                .SetEase(Ease.OutCubic);
-            rect.DOScale(Vector3.one, 0.25f)
-                .SetEase(Ease.OutBack, 1.5f)
-                .OnComplete(() => rect.localScale = Vector3.one);
+            var cellMoveAnimation = DOTween.Sequence();
+
+            cellMoveAnimation
+                .Append(rect.DOScale(Vector3.one * 0.9f, 0.07f)
+                            .SetEase(Ease.OutCubic))
+                .Append(rect.DOScale(Vector3.one, 0.15f)
+                            .SetEase(Ease.OutBack, 1.5f)
+                            .OnComplete(() => rect.localScale = Vector3.one))
+                .Play();
         }
 
         private void InitializeCellsParents(int[,] values)
@@ -106,7 +110,7 @@ namespace Puzzle15
             {
                 for (int j = 0; j < _gridSize; j++)
                 {
-                    var cell = new GameObject("Cell[" + i + ", " + j + "]");
+                    var cell = new GameObject($"Cell[{i}, {j}]");
                     cell.transform.SetParent(_transform);
                     cell.transform.localScale = Vector3.one;
 

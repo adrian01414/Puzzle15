@@ -7,11 +7,11 @@ namespace Puzzle15
     public class CounterPresenter: IInitializable, IDisposable
     {
         private readonly Counter _model;
-        private readonly SettableFieldView _view;
+        private readonly ISettableFieldView _view;
 
         private CompositeDisposable _disposables = new();
 
-        public CounterPresenter(Counter model, SettableFieldView view)
+        public CounterPresenter(Counter model, ISettableFieldView view)
         {
             _model = model;
             _view = view;

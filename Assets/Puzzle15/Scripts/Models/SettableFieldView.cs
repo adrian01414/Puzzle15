@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Puzzle15
 {
-    public abstract class SettableFieldView : MonoBehaviour
+    public abstract class SettableFieldView : MonoBehaviour, ISettableFieldView
     {
         [SerializeField] protected TMP_Text _outputText = null;
 
