@@ -6,15 +6,15 @@ namespace Puzzle15
 {
     public sealed class ProjectMonoInstaller: MonoInstaller
     {
-        [SerializeField] private List<LevelConfig> _levelConfigs;
-        [SerializeField] private LevelConfig _defaultConfig;
+        [SerializeField] private int _targetFrameRate = -1;
 
         public override void InstallBindings()
         {
+            Application.targetFrameRate = _targetFrameRate; //
+
             Container
-                .Bind<LevelConfigurationManager>()
-                .AsSingle()
-                .WithArguments(_levelConfigs, _defaultConfig);
+                .Bind<LevelConfig>()
+                .AsSingle();
         }
     }
 }

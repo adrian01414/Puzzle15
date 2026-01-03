@@ -7,7 +7,7 @@ namespace Puzzle15
         public event Action OnInitialized;
         public event Action<CellMoveData> OnCellMoved;
         public event Action OnWon;
-
+        
         public int[,] Cells => (int[,])_cells.Clone();
         public int Size => _size;
 

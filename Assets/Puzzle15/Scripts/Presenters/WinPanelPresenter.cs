@@ -28,7 +28,7 @@ namespace Puzzle15
 
         public void ShowPanel() {
             _view.gameObject.SetActive(true);
-            _view.SetTimeText(_stopwatch.Time.CurrentValue.ToString("F2") + "s");
+            _view.SetTimeText($"{_stopwatch.Time.CurrentValue.ToString("F2")}s");
             _view.SetMovesText(_counter.Value.ToString());
         }
 
