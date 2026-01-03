@@ -74,4 +74,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 261eb722ae8a4d84c978012f68e1adbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle15.ProjectMonoInstaller
-  _targetFrameRate: -1
+  _targetFrameRate: 90

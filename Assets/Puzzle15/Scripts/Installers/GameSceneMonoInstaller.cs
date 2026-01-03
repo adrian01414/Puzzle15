@@ -5,6 +5,7 @@ namespace Puzzle15
 {
     public class GameSceneMonoInstaller : MonoInstaller
     {
+        // view spawnpoints
         [SerializeField] private Transform _stopwatchSpawnTransform;
 
         [SerializeField] private GridView _view;
